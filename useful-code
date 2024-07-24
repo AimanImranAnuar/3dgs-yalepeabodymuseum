@@ -1,0 +1,47 @@
+# PIPELINE CODE
+FFMPEG -i <VIDEO> -qscale:v 1 -qmin 1 -vf fps=<FRAME EXTRACTION RATE> %04d.jpg
+-	Convert video to image set using FFMPEG.
+conda activate gaussian_splatting
+-	Activate the gaussian-splatting environment on Anaconda Prompt.
+python convert.py -s <DATA_FOLDER>
+-	Run a Python script to run Structure-From-Motion on your data using COLMAP.
+scp <DATA_ZIP> . <LINUX_SUGAR_DIRECTORY>
+-	Move your zipped data folder to your Linux machine.
+conda activate sugar
+-	Activate the sugar environment on your Linux machine.
+unzip <DATA_ZIP>
+-	Unzip the zipped data folder.
+python gaussian_splatting/train.py -s <DATA_FOLDER> –iterations 7000 -m <OUTPUT> 
+-	Train an initial Gaussian splat of your data.
+python train.py -s <DATA_FOLDEER> -c <OUTPUT> -r <“density”/“sdf”> --refinement_time <“short”/“medium”/“long”>
+-	Train a surface generation of your data.
+zip <REFINED_MESH_ZIP> <REFINED_MESH_FOLDER> -r 
+-	Zip the output folder containing your mesh.
+scp <REFINED_MESH_ZIP> .
+-	Move your zipped output folder to your Windows machine.
+scp <REFINED_PLY> .
+-	Move your output .ply++ file to your Windows machine.
+
+# EXAMPLE CODE  
+FFMPEG -i C:\Users\aza8\beetle\beetle.MOV -qscale:v 1 -qmin 1 -vf fps=1 %04d.jpg
+-	Convert beetle video “beetle.MOV” at its path to image set using FFMPEG.
+conda activate gaussian_splatting
+-	Activate the gaussian-splatting environment on Anaconda Prompt.
+python convert.py -s C:\Users\aza8\beetle\
+-	Run COLMAP on the “beetle” folder. Requires an “input” folder with images.
+scp C:\Users\aza8\beetle.zip . spinup_aza8:~/SuGaR
+-	Move beetle zip folder to the SuGaR directory on the Linux machine.
+conda activate sugar
+-	Activate the sugar environment on your Linux machine.
+unzip beetle.zip
+-	Unzip the beetle zip folder.
+python gaussian_splatting/train.py -s ~/SuGaR/beetle/ –iterations 7000 -m ~/SuGaR/beetle/output 
+-	Train an initial Gaussian splat of the beetle data, output it into the beetle output folder.
+python train.py -s ~/SuGaR/beetle/ -c ~/SuGaR/beetle/output -r “density” --refinement_time “short”
+-	Train a short, density-based surface generation of the beetle data.
+zip beetleoutput.zip beetle -r 
+-	From the refined_mesh folder, zip the beetle data.
+scp spinup_aza8:~/SuGaR/output/refined_mesh/beetleoutput.zip .
+-	Move the zipped output folder to the Windows machine.
+scp spinup_aza8:~/SuGaR/output/refined_ply/long_file_name .
+-	Move your output .ply++ file to your Windows machine.
